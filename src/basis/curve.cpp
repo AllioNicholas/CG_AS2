@@ -35,12 +35,24 @@ Curve coreBezier(const Vec3f& p0,
 	// YOUR CODE HERE (R1): build the basis matrix and loop the given number of steps,
 	// computing points on the spline
 
-	Mat4f B;
+	Mat4f B, P;
 	// ...
-	//here
+	B.setRow(0, Vec4f(1, -3, 3, -1));
+	B.setRow(1, Vec4f(0, 3, -6, 3));
+	B.setRow(2, Vec4f(0, 0, 3, -3));
+	B.setRow(3, Vec4f(0, 0, 0, 1));
+
+	P.setCol(0, Vec4f(p0.x, p1.x, p2.x, p3.x));
+	P.setCol(1, Vec4f(p0.y, p1.y, p2.y, p3.y));
+	P.setCol(2, Vec4f(p0.z, p1.z, p2.z, p3.z));
+	P.setCol(3, Vec4f(0, 0, 0, 1));
 
 	for (unsigned i = 0; i <= steps; ++i) {
 		// ...
+		Vec4f tPowers = Vec4f(1, i, i*i, i*i*i) / steps;
+		Vec4f Bpoly = B * tPowers;
+		Vec4f Vfour = P * Bpoly;
+		R[i].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
 	}
 
 	return R;
