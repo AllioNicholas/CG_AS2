@@ -49,11 +49,11 @@ Curve coreBezier(const Vec3f& p0,
 
 	for (unsigned i = 0; i <= steps; ++i) {
 		// ...
-		float t = float(i) / steps;
+		unsigned t = i / steps;
 		Vec4f tPowers = Vec4f(1, t, t*t, t*t*t);
 		Vec4f Bpoly = B * tPowers;
 		Vec4f Vfour = P * Bpoly;
-		R[t].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
+		R[i].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
 	}
 
 	return R;
