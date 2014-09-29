@@ -42,17 +42,18 @@ Curve coreBezier(const Vec3f& p0,
 	B.setRow(2, Vec4f(0, 0, 3, -3));
 	B.setRow(3, Vec4f(0, 0, 0, 1));
 
-	P.setCol(0, Vec4f(p0.x, p1.x, p2.x, p3.x));
-	P.setCol(1, Vec4f(p0.y, p1.y, p2.y, p3.y));
-	P.setCol(2, Vec4f(p0.z, p1.z, p2.z, p3.z));
-	P.setCol(3, Vec4f(0, 0, 0, 1));
+	P.setRow(0, Vec4f(p0.x, p1.x, p2.x, p3.x));
+	P.setRow(1, Vec4f(p0.y, p1.y, p2.y, p3.y));
+	P.setRow(2, Vec4f(p0.z, p1.z, p2.z, p3.z));
+	P.setRow(3, Vec4f(0, 0, 0, 1));
 
 	for (unsigned i = 0; i <= steps; ++i) {
 		// ...
-		Vec4f tPowers = Vec4f(1, i, i*i, i*i*i) / steps;
-		Vec4f Bpoly = B * tPowers;
-		Vec4f Vfour = P * Bpoly;
-		R[i].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
+		float t = float(i) / steps;
+		//Vec4f tPowers = Vec4f(1, t, t*t, t*t*t);
+		//Vec4f Bpoly = B * tPowers;
+		Vec4f Vfour = P * B * Vec4f(1, t, t*t, t*t*t);
+		R[t].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
 	}
 
 	return R;
@@ -76,6 +77,13 @@ Curve evalBezier(const vector<Vec3f>& P, unsigned steps) {
     // variable however you want, so long as you can control the
     // "resolution" of the discretized spline curve with it.
 
+	Curve R(steps + 1);
+
+	for (unsigned i = 0; i < P.size() / 3; i++) {
+		R = coreBezier(P[i], P[i+1], P[i+2], P[i+3], Vec3f(0, 0, 0), steps);
+	}
+
+
 	// EXTRA CREDIT NOTE:
     // Also compute the other Vec3fs for each CurvePoint: T, N, B.
     // A matrix [N, B, T] should be unit and orthogonal.
@@ -94,7 +102,7 @@ Curve evalBezier(const vector<Vec3f>& P, unsigned steps) {
     cerr << "\t>>> Returning empty curve." << endl;
 
     // Right now this will just return this empty curve.
-    return Curve();
+    return R;
 }
 
 Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
