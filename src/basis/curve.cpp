@@ -50,9 +50,9 @@ Curve coreBezier(const Vec3f& p0,
 	for (unsigned i = 0; i <= steps; ++i) {
 		// ...
 		float t = float(i) / steps;
-		//Vec4f tPowers = Vec4f(1, t, t*t, t*t*t);
-		//Vec4f Bpoly = B * tPowers;
-		Vec4f Vfour = P * B * Vec4f(1, t, t*t, t*t*t);
+		Vec4f tPowers = Vec4f(1, t, t*t, t*t*t);
+		Vec4f Bpoly = B * tPowers;
+		Vec4f Vfour = P * Bpoly;
 		R[t].V = Vec3f(Vfour.x, Vfour.y, Vfour.z);
 	}
 
@@ -77,10 +77,10 @@ Curve evalBezier(const vector<Vec3f>& P, unsigned steps) {
     // variable however you want, so long as you can control the
     // "resolution" of the discretized spline curve with it.
 
-	Curve R(steps + 1);
+	Curve R;
 
 	for (unsigned i = 0; i < P.size() / 3; i++) {
-		R = coreBezier(P[i], P[i+1], P[i+2], P[i+3], Vec3f(0, 0, 0), steps);
+		R = coreBezier(P[3*i], P[3*i+1], P[3*i+2], P[3*i+3], Vec3f(0, 0, 0), steps);
 	}
 
 
