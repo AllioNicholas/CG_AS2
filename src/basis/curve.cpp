@@ -119,6 +119,47 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
     // YOUR CODE HERE (R2):
     // We suggest you implement this function via a change of basis from
 	// B-spline to Bezier.  That way, you can just call your evalBezier function.
+	Curve R(steps + 1);
+
+	Mat4f bBazier, bBSpline;
+
+	bBazier.setRow(0, Vec4f(1, -3, 3, -1));
+	bBazier.setRow(1, Vec4f(0, 3, -6, 3));
+	bBazier.setRow(2, Vec4f(0, 0, 3, -3));
+	bBazier.setRow(3, Vec4f(0, 0, 0, 1));
+
+	bBSpline.setRow(0, Vec4f(1, -3, 3, -1));
+	bBSpline.setRow(1, Vec4f(4, 0, -6, 3));
+	bBSpline.setRow(2, Vec4f(1, 3, 3, -3));
+	bBSpline.setRow(3, Vec4f(0, 0, 0, 1));
+
+	bBSpline /= 6;
+
+
+	for (unsigned i = 0; i < P.size() / 4; ++i) {
+		Mat4f bSplineCP;
+		Mat4f bezierCP;
+		Vec3f CP1, CP2, CP3, CP4;
+
+		bSplineCP.setRow(0, Vec4f(P[i].x, P[i + 1].x, P[i + 2].x, P[i + 3].x));
+		bSplineCP.setRow(0, Vec4f(P[i].y, P[i + 1].y, P[i + 2].y, P[i + 3].y));
+		bSplineCP.setRow(0, Vec4f(P[i].z, P[i + 1].z, P[i + 2].z, P[i + 3].z));
+		bSplineCP.setRow(0, Vec4f(0, 0, 0, 1));
+
+		bezierCP = bSplineCP * bBSpline * bBazier.inverted();
+
+		Mat3f tmp = bezierCP.getXYZ();
+		CP1 = tmp.getCol(0);
+		CP2 = tmp.getCol(1);
+		CP3 = tmp.getCol(2);
+
+		CP4 = Vec3f(bezierCP(0, 3), bezierCP(1, 3), bezierCP(2, 3));
+
+
+		R = coreBezier(CP1, CP2, CP3, CP4, Vec3f(0,0,0), steps);
+
+	}
+
 
     cerr << "\t>>> evalBSpline has been called with the following input:" << endl;
 
@@ -131,7 +172,7 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
     cerr << "\t>>> Returning empty curve." << endl;
 
     // Return an empty curve right now.
-    return Curve();
+    return R;
 }
 
 Curve evalCircle(float radius, unsigned steps) {
