@@ -146,7 +146,9 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
 		bSplineCP.setRow(0, Vec4f(P[i].z, P[i + 1].z, P[i + 2].z, P[i + 3].z));
 		bSplineCP.setRow(0, Vec4f(0, 0, 0, 1));
 
-		bezierCP = bSplineCP * bBSpline * bBazier.inverted();
+		Mat4f bBazierInv = bBazier.inverted();
+
+		bezierCP = bSplineCP * bBSpline * bBazierInv;
 
 		Mat3f tmp = bezierCP.getXYZ();
 		CP1 = tmp.getCol(0);
