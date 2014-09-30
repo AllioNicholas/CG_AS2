@@ -83,7 +83,7 @@ Curve evalBezier(const vector<Vec3f>& P, unsigned steps) {
 
 	Curve R;
 
-	for (unsigned i = 0; i < P.size() / 3; i++) {
+	for (unsigned i = 0; i < (P.size() -1) / 3; i++) {
 		R = coreBezier(P[3*i], P[3*i+1], P[3*i+2], P[3*i+3], Vec3f(0, 0, 0), steps);
 	}
 
@@ -136,7 +136,7 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
 	bBSpline /= 6;
 
 
-	for (unsigned i = 0; i < P.size() / 4; ++i) {
+	for (unsigned i = 0; i < (P.size() - 4) + 1; ++i) {
 		Mat4f bSplineCP;
 		Mat4f bezierCP;
 		Vec3f CP1, CP2, CP3, CP4;
