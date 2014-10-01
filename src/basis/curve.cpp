@@ -142,9 +142,9 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
 		Vec3f CP1, CP2, CP3, CP4;
 
 		bSplineCP.setRow(0, Vec4f(P[i].x, P[i + 1].x, P[i + 2].x, P[i + 3].x));
-		bSplineCP.setRow(0, Vec4f(P[i].y, P[i + 1].y, P[i + 2].y, P[i + 3].y));
-		bSplineCP.setRow(0, Vec4f(P[i].z, P[i + 1].z, P[i + 2].z, P[i + 3].z));
-		bSplineCP.setRow(0, Vec4f(0, 0, 0, 1));
+		bSplineCP.setRow(1, Vec4f(P[i].y, P[i + 1].y, P[i + 2].y, P[i + 3].y));
+		bSplineCP.setRow(2, Vec4f(P[i].z, P[i + 1].z, P[i + 2].z, P[i + 3].z));
+		bSplineCP.setRow(3, Vec4f(0, 0, 0, 1));
 
 		Mat4f bBazierInv = bBazier.inverted();
 
