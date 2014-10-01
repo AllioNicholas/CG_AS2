@@ -142,6 +142,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				// YOUR CODE HERE (R3):
 				// Map the edge to the correct vertex index.
 				// This is just one line! Use new_vertices and the index of the just added position.
+				new_vertices[v0] = edge;
 			}
 		}
 		// compute positions for even (old) vertices
@@ -182,16 +183,16 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 			// YOUR CODE HERE (R3):
 			// fill in X and Y (it's the same for both)
-			//auto edge_a = std::make_pair(min(X, Y), max(X, Y));
-			//auto edge_b = ...
-			//auto edge_c = ...
+			auto edge_a = std::make_pair(min(even.x, even.y), max(even.x, even.y));
+			auto edge_b = std::make_pair(min(even.x, even.z), max(even.x, even.z));
+			auto edge_c = std::make_pair(min(even.z, even.y), max(even.z, even.y));
 
 			// The edges edge_a, edge_b and edge_c now define the vertex indices via new_vertices.
 			// (The mapping is done in the loop above.)
 			// The indices define the smaller triangle inside the indices defined by "even", in order.
 			// Read the vertex indices out of new_vertices to build the small triangle "odd"
 
-			// Vec3i odd = ...
+			Vec3i odd = Vec3i(new_vertices[edge_a]);
 
 			// Then, construct the four smaller triangles from the surrounding big triangle  "even"
 			// and the inner one, "odd". Push them to "new_indices".
