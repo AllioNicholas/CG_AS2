@@ -142,7 +142,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				// YOUR CODE HERE (R3):
 				// Map the edge to the correct vertex index.
 				// This is just one line! Use new_vertices and the index of the just added position.
-				new_vertices[v0] = edge;
+				new_vertices[edge] = i;
 			}
 		}
 		// compute positions for even (old) vertices
