@@ -192,24 +192,29 @@ void MeshWithConnectivity::LoopSubdivision() {
 			// The indices define the smaller triangle inside the indices defined by "even", in order.
 			// Read the vertex indices out of new_vertices to build the small triangle "odd"
 
-			Vec3i odd =  
+			Vec3i odd = Vec3i(new_vertices[edge_a], new_vertices[edge_b], new_vertices[edge_c]);
 
 			// Then, construct the four smaller triangles from the surrounding big triangle  "even"
 			// and the inner one, "odd". Push them to "new_indices".
 
 			//Push all new 4 triangles
-			new_indices.push_back( Vec3i());
+			/*new_indices.push_back(Vec3i(even[0], odd[0], odd[1]));
+			new_indices.push_back(Vec3i(odd[0], even[1], odd[2]));
+			new_indices.push_back(Vec3i(odd[1], odd[2], even[2]));
+			new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
+			*/
 
 			// NOTE: REMOVE the following line after you're done with the new triangles.
 			// This just keeps the mesh intact and serves as an example on how to add new triangles.
-			//new_indices.push_back( Vec3i( even[0], even[1], even[2] ) );
+			new_indices.push_back( Vec3i( even[0], even[1], even[2] ) );
+			new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
 		}
 
 		// ADD THESE LINES when R3 is finished. Replace the originals with the repositioned data.
-		//indices = std::move(new_indices);
-		//positions = std::move(new_positions);
-		//normals = std::move(new_normals);
-		//colors = std::move(new_colors);
+		indices = std::move(new_indices);
+		positions = std::move(new_positions);
+		normals = std::move(new_normals);
+		colors = std::move(new_colors);
 }
 
 } // namespace FW
