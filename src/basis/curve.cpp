@@ -120,7 +120,7 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
     // YOUR CODE HERE (R2):
     // We suggest you implement this function via a change of basis from
 	// B-spline to Bezier.  That way, you can just call your evalBezier function.
-	Curve R(steps + 1);
+	Curve R;
 
 	Mat4f bBazier, bBSpline;
 
