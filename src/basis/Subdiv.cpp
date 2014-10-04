@@ -131,10 +131,33 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				// Then, use the correct weights for each four corner vertex.
 				// This default implementation just puts the new vertex at the edge midpoint.
+
+				//
+				int indexVertex;
+
+				for (int e = 0; e < 3; e++) {
+					int indexEdge = neighborEdges[i][e]; //check for every edge
+					for (int t = 0; t < indices.size(); t++) {
+						if (neighborTris[t][indexEdge] == i) { //if we find a triangle with indexEdge as edge we check if it's the correct neighbor
+							for (int p = 0; p < 3; p++) {
+								if (indices[t][p] != v0 && indices[t][p] != v1) { //save the vertex that is not vo or v1
+									indexVertex = p;
+									break;
+								}
+							}
+						}
+					}
+				}
+
+				pos = (3.0f * positions[v0]) / 8 + (3.0f * positions[v1]) / 8 + (positions[indices[i][(j + 2) % 3]]) / 8 + (positions[i][indexVertex]) / 8;
+				col = (3.0f * colors[v0]) / 8 + (3.0f * colors[v1]) / 8 + (colors[indices[i][(j + 2) % 3]]) / 8 + (colors[i][indexVertex]) / 8;
+				norm = (3.0f * normals[v0]) / 8 + (3.0f * normals[v1]) / 8 + (normals[indices[i][(j + 2) % 3]]) / 8 + (normals[i][indexVertex]) / 8;
+
+				/*
 				pos = 0.5f * (positions[v0] + positions[v1]);
 				col = 0.5f * (colors[v0] + colors[v1]);
 				norm = 0.5f * (normals[v0] + normals[v1]);
-
+				*/
 				new_positions.push_back(pos);
 				new_colors.push_back(col);
 				new_normals.push_back(norm);
