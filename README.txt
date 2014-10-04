@@ -27,7 +27,7 @@ Hours spent on extra credit (approx.):
 
                         R1 Evaluating Bezier curves (2p): done
                       R2 Evaluating B-spline curves (2p): done
-       R3 Subdividing a mesh into smaller triangles (2p): not done
+       R3 Subdividing a mesh into smaller triangles (2p): done
         R4 Computing positions for the new vertices (2p): not done
 R5 Smoothing the mesh by repositioning old vertices (2p): not done
 

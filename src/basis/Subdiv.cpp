@@ -198,16 +198,16 @@ void MeshWithConnectivity::LoopSubdivision() {
 			// and the inner one, "odd". Push them to "new_indices".
 
 			//Push all new 4 triangles
-			/*new_indices.push_back(Vec3i(even[0], odd[0], odd[1]));
+			new_indices.push_back(Vec3i(even[0], odd[0], odd[1]));
 			new_indices.push_back(Vec3i(odd[0], even[1], odd[2]));
 			new_indices.push_back(Vec3i(odd[1], odd[2], even[2]));
 			new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
-			*/
+			
 
 			// NOTE: REMOVE the following line after you're done with the new triangles.
 			// This just keeps the mesh intact and serves as an example on how to add new triangles.
-			new_indices.push_back( Vec3i( even[0], even[1], even[2] ) );
-			new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
+			//new_indices.push_back( Vec3i( even[0], even[1], even[2] ) );
+			//new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
 		}
 
 		// ADD THESE LINES when R3 is finished. Replace the originals with the repositioned data.
