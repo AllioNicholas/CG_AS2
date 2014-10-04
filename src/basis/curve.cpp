@@ -82,9 +82,10 @@ Curve evalBezier(const vector<Vec3f>& P, unsigned steps) {
     // "resolution" of the discretized spline curve with it.
 
 	Curve R;
-
-	for (unsigned i = 0; i < (P.size() -1) / 3; i++) {
-		R = coreBezier(P[3*i], P[3*i+1], P[3*i+2], P[3*i+3], Vec3f(0, 0, 0), steps);
+	
+	for (unsigned i = 0; i < (P.size() - 1) / 3; i++) {
+		auto tass = coreBezier(P[3 * i], P[3 * i + 1], P[3 * i + 2], P[3 * i + 3], Vec3f(0, 0, 0), steps);
+		R.insert(R.end(), tass.begin(), tass.end());
 	}
 
 
@@ -157,8 +158,8 @@ Curve evalBspline(const vector<Vec3f>& P, unsigned steps) {
 
 		CP4 = Vec3f(bezierCP(0, 3), bezierCP(1, 3), bezierCP(2, 3));
 
-
-		R = coreBezier(CP1, CP2, CP3, CP4, Vec3f(0,0,0), steps);
+		auto tass = coreBezier(CP1, CP2, CP3, CP4, Vec3f(0, 0, 0), steps);
+		R.insert(R.end(), tass.begin(), tass.end());
 
 	}
 
