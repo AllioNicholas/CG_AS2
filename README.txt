@@ -30,7 +30,7 @@ Hours spent on extra credit (approx.): 0h
                       R2 Evaluating B-spline curves (2p): done
        R3 Subdividing a mesh into smaller triangles (2p): done
         R4 Computing positions for the new vertices (2p): done
-R5 Smoothing the mesh by repositioning old vertices (2p): not done
+R5 Smoothing the mesh by repositioning old vertices (2p): done (only for positive indecis)
 
 # Did you do any extra credit work?
 	No, I DIDN'T.
@@ -38,6 +38,7 @@ R5 Smoothing the mesh by repositioning old vertices (2p): not done
 (Describe what you did and, if there was a substantial amount of work involved, how you did it. Also describe how to use/activate your extra features, if they are interactive.)
 
 # Are there any known problems/bugs remaining in your code?
+	NEGATIVE INDICES ARE NOT HANDLED, SO R5 WORKS ONLY WITH THE ICOSAHEDRON OBJECT
 
 (Please provide a list of the problems. If possible, describe what you think the cause is, how you have attempted to diagnose or fix the problem, and how you would attempt to diagnose or fix it if you had more time or motivation. This is important: we are more likely to assign partial credit if you help us understand what's going on.)
 

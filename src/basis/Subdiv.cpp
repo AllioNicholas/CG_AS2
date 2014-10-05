@@ -136,15 +136,15 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				indexEdge = neighborEdges[i][j];	//index of the current edge
  				indexTrisNeigh = neighborTris[i][j]; //index neighbor triangle for current edge
-				if (indexTrisNeigh == -1 || indexEdge == -1) continue;
+				if (indexTrisNeigh == -1 || indexEdge == -1) continue; //if one or both indices are -1, skip to next one
 
 				indexVertex = indices[indexTrisNeigh][(indexEdge + 2) % 3];
 
 				pos = (0.375f * positions[v0]) + (0.375f * positions[v1]) + (0.125f * positions[indices[i][(j + 2) % 3]]) + (0.125f * positions[indexVertex]);
 				col = (0.375f * colors[v0]) + (0.375f * colors[v1]) + (0.125f * colors[indices[i][(j + 2) % 3]]) + (0.125f * colors[indexVertex]);
 				norm = (0.375f * normals[v0]) + (0.375f * normals[v1]) + (0.125f * normals[indices[i][(j + 2) % 3]]) + (0.125f * normals[indexVertex]);
-				
-		/*		pos = 0.5f * (positions[v0] + positions[v1]);
+				/*
+				pos = 0.5f * (positions[v0] + positions[v1]);
 				col = 0.5f * (colors[v0] + colors[v1]);
 				norm = 0.5f * (normals[v0] + normals[v1]);
 				*/
@@ -187,7 +187,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				do {
 					pos.push_back(positions[indices[currentT][currentOppV]]);	//Push current values of 3 components of the current opposite vertex
 					col.push_back(colors[indices[currentT][currentOppV]]);
-					norm.push_back(normals[indices[currentT][currentOppV]]);			
+					norm.push_back(normals[indices[currentT][currentOppV]]);
 
 					nextT = neighborTris[currentT][currentE];					//Next triangle will be at current edge index (if next triangle will be the firs visited, no more iterations for this vertex will be performed
 					nextE = (neighborEdges[currentT][currentE] + 1) % 3;		//Next edge will be one of the other not processed yet 
