@@ -137,7 +137,8 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				indexEdge = neighborEdges[i][j];
  				indexTrisNeigh = neighborTris[i][j]; //index neighbor triangle for current edge
-				if (indexTrisNeigh == -1 || indexEdge == -1) continue; //if one or both indexes are -1 skip edge
+				if (indexTrisNeigh == -1 || indexEdge == -1) 
+					continue; //if one or both indexes are -1 skip edge
 				indexVertex = indices[indexTrisNeigh][(indexEdge+2)%3];
 
 				pos = ((3.0f * positions[v0]) / 8.0f) + ((3.0f * positions[v1]) / 8.0f) + ((positions[indices[i][(j + 2) % 3]]) / 8.0f) + ((positions[indexVertex]) / 8.0f);
