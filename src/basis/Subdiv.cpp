@@ -136,20 +136,18 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				indexEdge = neighborEdges[i][j];	//index of the current edge
  				indexTrisNeigh = neighborTris[i][j]; //index neighbor triangle for current edge
-				if (indexTrisNeigh != -1 || indexEdge != -1) {
+				if (indexTrisNeigh == -1 || indexEdge == -1) continue;
 
-					indexVertex = indices[indexTrisNeigh][(indexEdge + 2) % 3];
+				indexVertex = indices[indexTrisNeigh][(indexEdge + 2) % 3];
 
-					pos = (0.375f * positions[v0]) + (0.375f * positions[v1]) + (0.125f * positions[indices[i][(j + 2) % 3]]) + (0.125f * positions[indexVertex]);
-					col = (0.375f * colors[v0]) + (0.375f * colors[v1]) + (0.125f * colors[indices[i][(j + 2) % 3]]) + (0.125f * colors[indexVertex]);
-					norm = (0.375f * normals[v0]) + (0.375f * normals[v1]) + (0.125f * normals[indices[i][(j + 2) % 3]]) + (0.125f * normals[indexVertex]);
-				}
-				else {
-					pos = 0.5f * (positions[v0] + positions[v1]);
-					col = 0.5f * (colors[v0] + colors[v1]);
-					norm = 0.5f * (normals[v0] + normals[v1]);
-				}
-
+				pos = (0.375f * positions[v0]) + (0.375f * positions[v1]) + (0.125f * positions[indices[i][(j + 2) % 3]]) + (0.125f * positions[indexVertex]);
+				col = (0.375f * colors[v0]) + (0.375f * colors[v1]) + (0.125f * colors[indices[i][(j + 2) % 3]]) + (0.125f * colors[indexVertex]);
+				norm = (0.375f * normals[v0]) + (0.375f * normals[v1]) + (0.125f * normals[indices[i][(j + 2) % 3]]) + (0.125f * normals[indexVertex]);
+				
+		/*		pos = 0.5f * (positions[v0] + positions[v1]);
+				col = 0.5f * (colors[v0] + colors[v1]);
+				norm = 0.5f * (normals[v0] + normals[v1]);
+				*/
 				new_positions.push_back(pos);
 				new_colors.push_back(col);
 				new_normals.push_back(norm);
@@ -189,7 +187,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				do {
 					pos.push_back(positions[indices[currentT][currentOppV]]);	//Push current values of 3 components of the current opposite vertex
 					col.push_back(colors[indices[currentT][currentOppV]]);
-					norm.push_back(normals[indices[currentT][currentOppV]]);
+					norm.push_back(normals[indices[currentT][currentOppV]]);			
 
 					nextT = neighborTris[currentT][currentE];					//Next triangle will be at current edge index (if next triangle will be the firs visited, no more iterations for this vertex will be performed
 					nextE = (neighborEdges[currentT][currentE] + 1) % 3;		//Next edge will be one of the other not processed yet 
@@ -217,7 +215,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				new_positions[v0] = (1.0f - pos.size()*B)*positions[v0] + B*new_positions[v0];
 				new_colors[v0] = (1.0f - pos.size()*B)*colors[v0] + B*new_colors[v0];
 				new_normals[v0] = (1.0f - pos.size()*B)*normals[v0] + B*new_normals[v0];
-				new_normals[v0].normalize();			//normalize is needed in order to mantein unit lenght
+				new_normals[v0].normalize();			//normalize is needed in order to maintain unit lenght
 				
 				/*
 				pos = positions[v0];
@@ -240,8 +238,8 @@ void MeshWithConnectivity::LoopSubdivision() {
 			// YOUR CODE HERE (R3):
 			// fill in X and Y (it's the same for both)
 			auto edge_a = std::make_pair(min(even.x, even.y), max(even.x, even.y));
-			auto edge_b = std::make_pair(min(even.x, even.z), max(even.x, even.z));
-			auto edge_c = std::make_pair(min(even.z, even.y), max(even.z, even.y));
+			auto edge_b = std::make_pair(min(even.y, even.z), max(even.y, even.z));
+			auto edge_c = std::make_pair(min(even.z, even.x), max(even.z, even.x));
 
 			// The edges edge_a, edge_b and edge_c now define the vertex indices via new_vertices.
 			// (The mapping is done in the loop above.)
@@ -254,9 +252,9 @@ void MeshWithConnectivity::LoopSubdivision() {
 			// and the inner one, "odd". Push them to "new_indices".
 
 			//Push all new 4 triangles
-			new_indices.push_back(Vec3i(even[0], odd[0], odd[1]));
-			new_indices.push_back(Vec3i(odd[0], even[1], odd[2]));
-			new_indices.push_back(Vec3i(odd[1], odd[2], even[2]));
+			new_indices.push_back(Vec3i(even[0], odd[0], odd[2]));
+			new_indices.push_back(Vec3i(even[1], odd[1], odd[0]));
+			new_indices.push_back(Vec3i(even[2], odd[2], odd[1]));
 			new_indices.push_back(Vec3i(odd[0], odd[1], odd[2]));
 			
 
