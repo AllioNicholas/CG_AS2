@@ -133,25 +133,16 @@ void MeshWithConnectivity::LoopSubdivision() {
 				// This default implementation just puts the new vertex at the edge midpoint.
 
 				//
-				int indexVertex;
+				int indexVertex, indexTrisNeigh, indexEdge;
 
-				for (int e = 0; e < 3; e++) {
-					int indexEdge = neighborEdges[i][e]; //check for every edge
-					for (int t = 0; t < indices.size(); t++) {
-						if (neighborTris[t][indexEdge] == i) { //if we find a triangle with indexEdge as edge we check if it's the correct neighbor
-							for (int p = 0; p < 3; p++) {
-								if (indices[t][p] != v0 && indices[t][p] != v1) { //save the vertex that is not vo or v1
-									indexVertex = p;
-									break;
-								}
-							}
-						}
-					}
-				}
+				indexEdge = neighborEdges[i][j];
+ 				indexTrisNeigh = neighborTris[i][j]; //index neighbor triangle for current edge
+				if (indexTrisNeigh == -1 || indexEdge == -1) continue; //if one or both indexes are -1 skip edge
+				indexVertex = indices[indexTrisNeigh][(indexEdge+2)%3];
 
-				pos = (3.0f * positions[v0]) / 8 + (3.0f * positions[v1]) / 8 + (positions[indices[i][(j + 2) % 3]]) / 8 + (positions[i][indexVertex]) / 8;
-				col = (3.0f * colors[v0]) / 8 + (3.0f * colors[v1]) / 8 + (colors[indices[i][(j + 2) % 3]]) / 8 + (colors[i][indexVertex]) / 8;
-				norm = (3.0f * normals[v0]) / 8 + (3.0f * normals[v1]) / 8 + (normals[indices[i][(j + 2) % 3]]) / 8 + (normals[i][indexVertex]) / 8;
+				pos = ((3.0f * positions[v0]) / 8.0f) + ((3.0f * positions[v1]) / 8.0f) + ((positions[indices[i][(j + 2) % 3]]) / 8.0f) + ((positions[indexVertex]) / 8.0f);
+				col = ((3.0f * colors[v0]) / 8.0f) + ((3.0f * colors[v1]) / 8.0f) + ((colors[indices[i][(j + 2) % 3]]) / 8.0f) + ((colors[indexVertex]) / 8.0f);
+				norm = ((3.0f * normals[v0]) / 8.0f) + ((3.0f * normals[v1]) / 8.0f) + ((normals[indices[i][(j + 2) % 3]]) / 8.0f) + ((normals[indexVertex]) / 8.0f);
 
 				/*
 				pos = 0.5f * (positions[v0] + positions[v1]);
@@ -181,20 +172,60 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				vertexComputed[v0] = true;
 
-				Vec3f pos, col, norm;
+				std::vector<Vec3f> pos, col, norm;
 				// YOUR CODE HERE (R5): reposition the old vertices
 
 				// This default implementation just passes the data through unchanged.
 				// You need to replace these three lines with the loop over the 1-ring
 				// around vertex v0, and compute the new position as a weighted average
 				// of the other vertices as described in the handout.
+
+				int nextE, nextT, nextOppV;
+				auto currentT = i;
+				auto currentE = j;
+				auto currentOppV = (j + 1) % 3;
+				do {
+					pos.push_back(positions[indices[currentT][currentOppV]]);	//Push current values of 3 components of the current opposite vertex
+					col.push_back(colors[indices[currentT][currentOppV]]);
+					norm.push_back(normals[indices[currentT][currentOppV]]);
+
+					nextT = neighborTris[currentT][currentE];					//Next triangle will be at current edge index (if next triangle will be the firs visited, no more iterations for this vertex will be performed
+					nextE = (neighborEdges[currentT][currentE] + 1) % 3;		//Next edge will be one of the other not processed yet 
+					nextOppV = (nextE + 1) % 3;									//Next vertex will be the opposite of the next edge
+					currentT = nextT;						//Update current variables with "next values" in order to compute next iteration if ring is not completed
+					currentE = nextE;
+					currentOppV = nextOppV;
+				} while (nextT != i);
+			
+
+				float B;
+				if (pos.size() != 3)
+					B = 3.0f / (8.0f * pos.size());
+				else
+					B = 3.0f / 16.0f;
+
+
+				for (unsigned k = 0; k < pos.size(); k++) {	//Adding all vertexes around the current one in order to compute correct weights evaluation
+					new_positions[v0] += pos[k];
+					new_colors[v0] += col[k];
+					new_normals[v0] += norm[k];
+				}
+
+				//Weights evaluation based on previous setting of B
+				new_positions[v0] = (1.0f - pos.size()*B)*positions[v0] + B*new_positions[v0];
+				new_colors[v0] = (1.0f - pos.size()*B)*colors[v0] + B*new_colors[v0];
+				new_normals[v0] = (1.0f - pos.size()*B)*normals[v0] + B*new_normals[v0];
+				new_normals[v0].normalize();			//normalize is needed in order to mantein unit lenght
+
+				/*
 				pos = positions[v0];
 				col = colors[v0];
 				norm = normals[v0];
-
+				
 				new_positions[v0] = pos;
 				new_colors[v0] = col;
 				new_normals[v0] = norm;
+				*/
 			}
 		}
 		// and then, finally, regenerate topology
