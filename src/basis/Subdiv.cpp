@@ -131,25 +131,25 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				// Then, use the correct weights for each four corner vertex.
 				// This default implementation just puts the new vertex at the edge midpoint.
-
-				//
+				
 				int indexVertex, indexTrisNeigh, indexEdge;
 
-				indexEdge = neighborEdges[i][j];
+				indexEdge = neighborEdges[i][j];	//index of the current edge
  				indexTrisNeigh = neighborTris[i][j]; //index neighbor triangle for current edge
-				if (indexTrisNeigh == -1 || indexEdge == -1) 
-					continue; //if one or both indexes are -1 skip edge
-				indexVertex = indices[indexTrisNeigh][(indexEdge+2)%3];
+				if (indexTrisNeigh != -1 || indexEdge != -1) {
 
-				pos = ((3.0f * positions[v0]) / 8.0f) + ((3.0f * positions[v1]) / 8.0f) + ((positions[indices[i][(j + 2) % 3]]) / 8.0f) + ((positions[indexVertex]) / 8.0f);
-				col = ((3.0f * colors[v0]) / 8.0f) + ((3.0f * colors[v1]) / 8.0f) + ((colors[indices[i][(j + 2) % 3]]) / 8.0f) + ((colors[indexVertex]) / 8.0f);
-				norm = ((3.0f * normals[v0]) / 8.0f) + ((3.0f * normals[v1]) / 8.0f) + ((normals[indices[i][(j + 2) % 3]]) / 8.0f) + ((normals[indexVertex]) / 8.0f);
+					indexVertex = indices[indexTrisNeigh][(indexEdge + 2) % 3];
 
-				/*
-				pos = 0.5f * (positions[v0] + positions[v1]);
-				col = 0.5f * (colors[v0] + colors[v1]);
-				norm = 0.5f * (normals[v0] + normals[v1]);
-				*/
+					pos = (0.375f * positions[v0]) + (0.375f * positions[v1]) + (0.125f * positions[indices[i][(j + 2) % 3]]) + (0.125f * positions[indexVertex]);
+					col = (0.375f * colors[v0]) + (0.375f * colors[v1]) + (0.125f * colors[indices[i][(j + 2) % 3]]) + (0.125f * colors[indexVertex]);
+					norm = (0.375f * normals[v0]) + (0.375f * normals[v1]) + (0.125f * normals[indices[i][(j + 2) % 3]]) + (0.125f * normals[indexVertex]);
+				}
+				else {
+					pos = 0.5f * (positions[v0] + positions[v1]);
+					col = 0.5f * (colors[v0] + colors[v1]);
+					norm = 0.5f * (normals[v0] + normals[v1]);
+				}
+
 				new_positions.push_back(pos);
 				new_colors.push_back(col);
 				new_normals.push_back(norm);
@@ -173,6 +173,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 
 				vertexComputed[v0] = true;
 
+				//Vec3f pos, col, norm;
 				std::vector<Vec3f> pos, col, norm;
 				// YOUR CODE HERE (R5): reposition the old vertices
 
@@ -180,7 +181,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				// You need to replace these three lines with the loop over the 1-ring
 				// around vertex v0, and compute the new position as a weighted average
 				// of the other vertices as described in the handout.
-
+				
 				int nextE, nextT, nextOppV;
 				auto currentT = i;
 				auto currentE = j;
@@ -217,7 +218,7 @@ void MeshWithConnectivity::LoopSubdivision() {
 				new_colors[v0] = (1.0f - pos.size()*B)*colors[v0] + B*new_colors[v0];
 				new_normals[v0] = (1.0f - pos.size()*B)*normals[v0] + B*new_normals[v0];
 				new_normals[v0].normalize();			//normalize is needed in order to mantein unit lenght
-
+				
 				/*
 				pos = positions[v0];
 				col = colors[v0];
